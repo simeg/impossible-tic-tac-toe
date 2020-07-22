@@ -1,27 +1,18 @@
 language: rust
+rust    : stable
 
-cache: cargo
+addons:
+  firefox: latest
+  chrome : stable
 
-matrix:
-  include:
+install:
+  - curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
 
-  # Builds with wasm-pack.
-  - rust: stable
-    env: RUST_BACKTRACE=1
-    addons:
-      firefox: latest
-      chrome: stable
-    before_script:
-      - (test -x $HOME/.cargo/bin/cargo-install-update || cargo install cargo-update)
-      - (test -x $HOME/.cargo/bin/cargo-generate || cargo install --vers "^0.2" cargo-generate)
-      - cargo install-update -a
-      - curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh -s -- -f
-    script:
-      - cargo generate --git . --name testing
-      # Having a broken Cargo.toml (in that it has curlies in fields) anywhere
-      # in any of our parent dirs is problematic.
-      - mv Cargo.toml Cargo.toml.tmpl
-      - cd testing
-      - wasm-pack build
-      - wasm-pack test --chrome --firefox --headless
+script:
 
+  # this will test the non wasm targets if your crate has those, otherwise remove this line.
+  #
+  - cargo test
+
+  - wasm-pack test --firefox --headless
+  - wasm-pack test --chrome  --headless
