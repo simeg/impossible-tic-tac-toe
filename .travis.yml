@@ -6,7 +6,7 @@ matrix:
   include:
 
   # Builds with wasm-pack.
-  - rust: beta
+  - rust: stable
     env: RUST_BACKTRACE=1
     addons:
       firefox: latest
