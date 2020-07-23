@@ -1,4 +1,4 @@
-.PHONY: ci-js ci-rust build build-js build-rust deps fmt update serve test-js test-rust lint-js lint-rust
+.PHONY: ci-js ci-rust build build-js build-rust deps deploy fmt update serve test-js test-rust lint-js lint-rust
 
 # Is run on CI/CD
 ci-js: deps lint-js test-js
@@ -14,6 +14,9 @@ build-js:
 # Build Rust code
 build-rust:
 	wasm-pack build
+
+deploy:
+	git push heroku master
 
 # Install JS dependencies
 deps:

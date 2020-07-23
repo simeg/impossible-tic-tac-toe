@@ -1,13 +1,13 @@
 use crate::board::CellValue::Empty;
 
-#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, Copy)]
+#[derive(Serialize, Debug, PartialEq, Clone, Copy)]
 pub enum CellValue {
     Empty = 0,
     CPU = 1,
     Human = 2,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone)]
+#[derive(Serialize, Debug, Clone)]
 pub struct Cell {
     pub row: u8,
     pub column: u8,
