@@ -1,18 +1,18 @@
-language: rust
-rust    : stable
+matrix:
+  include:
+    - language: node_js
+      node_js: "14"
+      before_script:
+        - mkdir pkg # Mock WASM dependency
+      script: make ci-js
 
-addons:
-  firefox: latest
-  chrome : stable
-
-install:
-  - curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
-
-script:
-
-  # this will test the non wasm targets if your crate has those, otherwise remove this line.
-  #
-  - cargo test
-
-  - wasm-pack test --firefox --headless
-  - wasm-pack test --chrome  --headless
+    - language: rust
+      rust: stable
+      addons:
+        firefox: latest
+        chrome: stable
+      before_script:
+        - rustup component add rustfmt --toolchain stable-x86_64-unknown-linux-gnu # Install cargo fmt
+      install:
+        - curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
+      script: make ci-rust

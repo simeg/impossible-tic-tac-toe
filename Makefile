@@ -1,7 +1,8 @@
-.PHONY: ci build build-js build-rust deps fmt update serve test lint
+.PHONY: ci-js ci-rust build build-js build-rust deps fmt update serve test-js test-rust lint-js lint-rust
 
 # Is run on CI/CD
-ci: deps lint test
+ci-js: deps lint-js test-js
+ci-rust: lint-rust test-rust
 
 # Build both JS and Rust code
 build: build-js build-rust
@@ -31,12 +32,16 @@ update: build
 serve:
 	cd www && yarn run webpack-dev-server
 
-# Run tests
-test:
-	cargo test
-	# cd www; jest
+test-js:
+	cd www; exit 0
 
-# Run linters
-lint:
-	cargo fmt --all -- --check
+test-rust:
+	cargo test
+	wasm-pack test --firefox --headless
+	wasm-pack test --chrome  --headless
+
+lint-js:
 	cd www; yarn run eslint *.js
+
+lint-rust:
+	cargo fmt --all -- --check
