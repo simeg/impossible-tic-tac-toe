@@ -1,8 +1,11 @@
 [package]
 name = "impossible-tic-tac-toe"
+description = "A game of tic-tac-toe where you cannot win"
+repository = "https://github.com/simeg/impossible-tic-tac-toe"
 version = "0.1.0"
 authors = ["Simon Egersand <s.egersand@gmail.com>"]
 edition = "2018"
+license = "MIT"
 
 [lib]
 crate-type = ["cdylib", "rlib"]

@@ -2,7 +2,7 @@
   "name": "impossible-tic-tac-toe",
   "version": "0.0.0",
   "description": "A game of tic-tac-toe that you cannot win",
-  "main": "index.js",
+  "main": "www/index.js",
   "homepage": "https://github.com/simeg/impossible-tic-tac-toe#readme",
   "author": "Simon Egersand",
   "license": "MIT",
@@ -10,15 +10,21 @@
     "type": "git",
     "url": "git+https://github.com/simeg/impossible-tic-tac-toe.git"
   },
+  "scripts": {
+    "heroku-postbuild": "yarn run webpack -p --config ./www/webpack.config.js",
+    "preinstall": "wasm-pack build",
+    "postinstall": "yarn upgrade wasm-impossible-tic-tac-toe"
+  },
   "dependencies": {
-    "wasm-impossible-tic-tac-toe": "file:../pkg"
+    "copy-webpack-plugin": "5.0.0",
+    "express": "4.17.1",
+    "path": "0.12.7",
+    "wasm-impossible-tic-tac-toe": "file:./pkg",
+    "webpack": "4.29.3",
+    "webpack-cli": "3.1.0"
   },
   "devDependencies": {
-    "copy-webpack-plugin": "5.0.0",
     "eslint": "7.5.0",
-    "hello-wasm-pack": "0.1.0",
-    "webpack": "4.29.3",
-    "webpack-cli": "3.1.0",
     "webpack-dev-server": "3.1.5"
   }
 }

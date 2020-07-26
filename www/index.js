@@ -1,43 +1,16 @@
-import {Game} from "wasm-impossible-tic-tac-toe";
+/* eslint-disable */
 
-const game = Game.new();
+const express = require("express");
+const path = require("path");
+const port = process.env.PORT || 3000;
+const app = express();
 
-const updateBoard = () =>
-  game.getCells().forEach(c => {
-    const {row, column} = c;
-    const element = document.getElementById(`cell-${row}-${column}`);
-    if (c.value.toLowerCase() !== "empty") {
-      element.innerText = toBoardValue(c.value);
-    }
-  });
+// the __dirname is the current directory from where the script is running
+app.use(express.static(__dirname + "/dist"));
 
-const toBoardValue = rustValue => {
-  switch (rustValue.toLowerCase()) {
-  case "human":
-    return "X";
-  case "cpu":
-    return "O";
-  default:
-    throw new Error("Unsupported type: " + rustValue);
-  }
-};
+// send the user to index html page inspite of the url
+app.get("*", (req, res) => {
+  res.sendFile(path.resolve(__dirname, "index.html"));
+});
 
-const toObj = c => ({"id": `cell-${c.row}-${c.column}`, "x": c.row, "y": c.column});
-const getElement = c => ({element: document.getElementById(c.id), x: c.x, y: c.y});
-const attachOnClick = ({element, x, y}) => {
-  element.onclick = e => {
-    console.log("[js] clicked");
-    if (e.target.innerText === "") {
-      game.humanPlay(x, y);
-      game.hasEmptyCells() && game.cpuPlay();
-      updateBoard();
-
-      if (game.hasWinner()) {
-        alert("WE HAVE A WINNER");
-      }
-    }
-  };
-};
-const initGame = () => game.getCells().map(toObj).map(getElement).map(attachOnClick);
-
-initGame();
+app.listen(port, () => console.log(`Listening at http://localhost:${port}`));
