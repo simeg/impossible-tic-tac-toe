@@ -24,11 +24,6 @@ impl Game {
         JsValue::from_serde(&self.board.get_cells()).unwrap()
     }
 
-    #[wasm_bindgen(js_name = hasWinner)]
-    pub fn has_winner(&self) -> bool {
-        false
-    }
-
     #[wasm_bindgen(js_name = hasEmptyCells)]
     pub fn has_empty_cells(&self) -> bool {
         Board::is_moves_left(self.board.get_cells())
@@ -45,5 +40,9 @@ impl Game {
             .evaluator
             .find_best_move(self.board.get_cells().clone());
         self.board.set_cpu(best_move.row, best_move.column);
+    }
+
+    pub fn restart(&mut self) {
+        self.board.clear();
     }
 }

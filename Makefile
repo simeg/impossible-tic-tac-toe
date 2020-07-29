@@ -25,10 +25,10 @@ deps:
 # Fix all linting errors
 fmt:
 	rustfmt src/*.rs
-	cd www; yarn run eslint --fix *.js
+	yarn run eslint --fix www/*.js
 
 # Run when JS code should pick up Rust code changes
-update: build
+update: build-rust
 	cd www && yarn upgrade wasm-impossible-tic-tac-toe
 
 # Start webpack server
@@ -44,7 +44,7 @@ test-rust:
 	wasm-pack test --chrome  --headless
 
 lint-js:
-	cd www; yarn run eslint *.js
+	yarn run eslint www/*.js
 
 lint-rust:
 	cargo fmt --all -- --check

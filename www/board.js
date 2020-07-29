@@ -6,9 +6,7 @@ const updateBoard = () =>
   game.getCells().forEach(c => {
     const {row, column} = c;
     const element = document.getElementById(`cell-${row}-${column}`);
-    if (c.value.toLowerCase() !== "empty") {
-      element.innerText = toBoardValue(c.value);
-    }
+    element.innerText = toBoardValue(c.value);
   });
 
 const toBoardValue = rustValue => {
@@ -17,6 +15,8 @@ const toBoardValue = rustValue => {
     return "X";
   case "cpu":
     return "O";
+  case "empty":
+    return "";
   default:
     throw new Error("Unsupported type: " + rustValue);
   }
@@ -31,13 +31,15 @@ const attachOnClick = ({element, x, y}) => {
       game.humanPlay(x, y);
       game.hasEmptyCells() && game.cpuPlay();
       updateBoard();
-
-      if (game.hasWinner()) {
-        alert("WE HAVE A WINNER");
-      }
     }
   };
 };
-const initGame = () => game.getCells().map(toObj).map(getElement).map(attachOnClick);
+const initGame = () => {
+  game.getCells().map(toObj).map(getElement).map(attachOnClick);
+  document.querySelector("#btn-restart").onclick = () => {
+    game.restart();
+    updateBoard();
+  };
+};
 
 initGame();

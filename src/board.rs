@@ -46,6 +46,19 @@ impl Board {
         Board { cells }
     }
 
+    pub fn clear(&mut self) {
+        let cleared_cells = self
+            .cells
+            .clone()
+            .into_iter()
+            .map(|mut c| {
+                c.value = Empty;
+                c
+            })
+            .collect();
+        self.cells = cleared_cells
+    }
+
     pub fn get_cells(&self) -> Vec<Cell> {
         self.cells.clone()
     }
@@ -96,7 +109,7 @@ impl Board {
         if let Some(index) = cells.iter().position(|c| c == &cell) {
             let old_cell = cells.get(index).unwrap();
             if old_cell.is_empty() {
-                std::mem::replace(&mut cells[index], cell);
+                let _ = std::mem::replace(&mut cells[index], cell);
                 return Some(cells);
             }
         }
