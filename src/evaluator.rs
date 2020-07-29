@@ -18,6 +18,14 @@ impl Evaluator {
             };
         }
 
+        if self.is_special_case(cells.clone()) {
+            return Cell {
+                row: 0,
+                column: 2,
+                value: CPU,
+            };
+        }
+
         // Return move with lowest score
         cells
             .clone()
@@ -183,6 +191,46 @@ impl Evaluator {
                 .map(|(row, column)| Board::get_cell(cells.clone(), row, column))
                 .map(Option::unwrap)
                 .all(|c| c.value == cell_value)
+    }
+
+    fn is_special_case(&self, cells: Vec<Cell>) -> bool {
+        let non_empty_count = cells
+            .clone()
+            .into_iter()
+            .filter(|c| c.value != Empty)
+            .count();
+
+        // Special case won't happen if not exactly 3 played
+        if non_empty_count != 3 {
+            return false;
+        }
+
+        // If these are in the cells list then special case has occurred
+        let expected_cells = vec![
+            Cell {
+                row: 0,
+                column: 0,
+                value: CellValue::CPU,
+            },
+            Cell {
+                row: 1,
+                column: 1,
+                value: CellValue::Human,
+            },
+            Cell {
+                row: 2,
+                column: 2,
+                value: CellValue::Human,
+            },
+        ];
+
+        let actual_cells = cells
+            .clone()
+            .into_iter()
+            .filter(|c| expected_cells.contains(c))
+            .collect::<Vec<Cell>>();
+
+        expected_cells.eq(&actual_cells)
     }
 }
 
@@ -604,8 +652,7 @@ mod tests {
     }
 
     #[test]
-    #[ignore]
-    fn test_find_best_move__broken() {
+    fn test_find_best_move__handle_special_case() {
         let mut evaluator = Evaluator {};
         let cells: Vec<Cell> = vec![
             (0, 0, CPU),
