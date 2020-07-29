@@ -13,4 +13,7 @@ module.exports = {
   plugins: [
     new CopyWebpackPlugin(['www/index.html'])
   ],
+  devServer: {
+    compress: true, // gzip compression
+  }
 };
