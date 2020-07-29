@@ -2,12 +2,16 @@ import {Game} from "wasm-impossible-tic-tac-toe";
 
 const game = Game.new();
 
-const updateBoard = () =>
+const updateBoard = () => {
   game.getCells().forEach(c => {
     const {row, column} = c;
     const element = document.getElementById(`cell-${row}-${column}`);
     element.innerText = toBoardValue(c.value);
   });
+  if (!game.hasEmptyCells()) {
+    document.querySelector("#lose-text").style.visibility = "visible";
+  }
+};
 
 const toBoardValue = rustValue => {
   switch (rustValue.toLowerCase()) {
@@ -35,11 +39,19 @@ const attachOnClick = ({element, x, y}) => {
   };
 };
 const initGame = () => {
-  game.getCells().map(toObj).map(getElement).map(attachOnClick);
-  document.querySelector("#btn-restart").onclick = () => {
+  game.getCells()
+    .map(toObj)
+    .map(getElement)
+    .map(attachOnClick);
+
+  const resetBoardState = () => {
+    document.querySelector("#lose-text").style.visibility = "hidden";
     game.restart();
     updateBoard();
   };
+
+  document.querySelector("#btn-restart").onclick = () => resetBoardState();
+  document.addEventListener("keypress", e => e.key.toLowerCase() === "r" && resetBoardState());
 };
 
 initGame();

@@ -9,7 +9,7 @@ build: build-js build-rust
 
 # Build JS code
 build-js:
-	cd www && yarn run webpack --config webpack.config.js
+	yarn run webpack --config ./www/webpack.config.js
 
 # Build Rust code
 build-rust:
@@ -20,7 +20,7 @@ deploy:
 
 # Install JS dependencies
 deps:
-	cd www; yarn install --skip-integrity-check --non-interactive --no-progress
+	cd www && yarn install --skip-integrity-check --non-interactive --no-progress
 
 # Fix all linting errors
 fmt:
