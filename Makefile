@@ -33,7 +33,7 @@ update: build
 
 # Start webpack server
 serve:
-	cd www && yarn run webpack-dev-server
+	cd www && yarn run webpack-dev-server --config ./www/webpack.config.dev.js
 
 test-js:
 	cd www; exit 0
