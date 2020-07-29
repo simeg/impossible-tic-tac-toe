@@ -8,9 +8,6 @@ matrix:
 
     - language: rust
       rust: stable
-      addons:
-        firefox: latest
-        chrome: stable
       before_script:
         - rustup component add rustfmt --toolchain stable-x86_64-unknown-linux-gnu # Install cargo fmt
       install:
