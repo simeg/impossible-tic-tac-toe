@@ -26,7 +26,7 @@ impl Cell {
 
 impl PartialEq for Cell {
     fn eq(&self, other: &Self) -> bool {
-        (self.row, self.column) == (other.row, other.column)
+        (self.row, self.column, self.value) == (other.row, other.column, other.value)
     }
 }
 
@@ -106,7 +106,10 @@ impl Board {
     }
 
     pub fn set_on(mut cells: Vec<Cell>, cell: Cell) -> Option<Vec<Cell>> {
-        if let Some(index) = cells.iter().position(|c| c == &cell) {
+        if let Some(index) = cells
+            .iter()
+            .position(|c| (c.row, c.column) == (cell.row, cell.column))
+        {
             let old_cell = cells.get(index).unwrap();
             if old_cell.is_empty() {
                 let _ = std::mem::replace(&mut cells[index], cell);

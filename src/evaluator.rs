@@ -46,11 +46,14 @@ impl Evaluator {
                 (c, score)
             })
             .min_by(|(_c, score), (_c2, score2)| score2.cmp(score))
-            .map(|(c, _score)| c)
+            .map(|(mut c, _score)| {
+                c.value = CPU;
+                c
+            })
             .unwrap()
     }
 
-    pub fn minimax(&mut self, cells: Vec<Cell>, depth: u8) -> i8 {
+    fn minimax(&mut self, cells: Vec<Cell>, depth: u8) -> i8 {
         let score = self.evaluate(cells.clone());
 
         // If human/CPU has won the game
@@ -87,7 +90,7 @@ impl Evaluator {
             .unwrap()
     }
 
-    pub fn evaluate(&self, cells: Vec<Cell>) -> i8 {
+    fn evaluate(&self, cells: Vec<Cell>) -> i8 {
         // Check for wins in rows
         for row in 0..=2 {
             let cells_from_same_row = cells
@@ -119,7 +122,7 @@ impl Evaluator {
             }
         }
 
-        // Check for wins in rows
+        // Check for wins in columns
         for column in 0..=2 {
             let cells_from_same_column = cells
                 .clone()
@@ -179,7 +182,7 @@ impl Evaluator {
         0
     }
 
-    pub fn eval_diagonal_win(
+    fn eval_diagonal_win(
         &self,
         cells: Vec<Cell>,
         diagonal: Vec<(u8, u8)>,
