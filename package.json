@@ -12,7 +12,7 @@
   },
   "scripts": {
     "heroku-postbuild": "yarn run webpack -p --config ./www/webpack.config.js",
-    "preinstall": "wasm-pack build",
+    "preinstall": "if [ -z \"$TRAVIS_BRANCH\" ]; then wasm-pack build; fi",
     "postinstall": "yarn upgrade wasm-impossible-tic-tac-toe"
   },
   "dependencies": {

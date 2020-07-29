@@ -2,7 +2,7 @@ matrix:
   include:
     - language: node_js
       node_js: "14"
-      before_script:
+      before_install:
         - mkdir pkg # Mock WASM dependency
       script: make ci-js
 
@@ -11,5 +11,5 @@ matrix:
       before_script:
         - rustup component add rustfmt --toolchain stable-x86_64-unknown-linux-gnu # Install cargo fmt
       install:
-        - curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
+        - curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh # Install wasm-pack
       script: make ci-rust

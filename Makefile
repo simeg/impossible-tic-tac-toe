@@ -40,8 +40,6 @@ test-js:
 
 test-rust:
 	cargo test
-	wasm-pack test --firefox --headless
-	wasm-pack test --chrome  --headless
 
 lint-js:
 	yarn run eslint www/*.js
