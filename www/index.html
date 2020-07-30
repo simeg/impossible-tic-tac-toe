@@ -37,6 +37,7 @@
         </div>
         <button id="btn-restart">Restart (r)</button>
         <span id="lose-text">Ha, you lose 😎</span>
+        <span id="draw-text">Draw, try again! 😌</span>
     </div>
 </div>
 <script src="./bootstrap.js"></script>
@@ -141,10 +142,10 @@
         cursor: pointer;
     }
 
-    #lose-text {
+    #lose-text, #draw-text {
         float: right;
         font-family: monospace;
         margin-top: 15px;
-        visibility: hidden;
+        display: none;
     }
 </style>

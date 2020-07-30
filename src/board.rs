@@ -1,4 +1,4 @@
-use crate::board::CellValue::Empty;
+use crate::board::CellValue::{Empty, CPU};
 
 #[derive(Serialize, Debug, PartialEq, Clone, Copy)]
 pub enum CellValue {
@@ -63,8 +63,81 @@ impl Board {
         self.cells.clone()
     }
 
-    pub fn is_moves_left(cells: Vec<Cell>) -> bool {
-        cells.into_iter().any(|c| c.value == Empty)
+    pub fn is_cpu_winner(&self) -> bool {
+        // Check row wins
+        for row in 0..=2 {
+            let cpu_row_cells = self
+                .cells
+                .clone()
+                .into_iter()
+                .filter(|c| (c.row, c.value) == (row, CPU))
+                .collect::<Vec<Cell>>();
+
+            let cpu_won_row = cpu_row_cells.len() == 3;
+            if cpu_won_row {
+                return true;
+            }
+        }
+
+        // Check column wins
+        for column in 0..=2 {
+            let cpu_column_cells = self
+                .cells
+                .clone()
+                .into_iter()
+                .filter(|c| (c.column, c.value) == (column, CPU))
+                .collect::<Vec<Cell>>();
+
+            let cpu_won_column = cpu_column_cells.len() == 3;
+            if cpu_won_column {
+                return true;
+            }
+        }
+
+        // Check diagonal wins
+        let diagonal_win: Vec<Cell> = vec![(0, 0), (1, 1), (2, 2)]
+            .into_iter()
+            .map(|(row, column)| Cell {
+                row,
+                column,
+                value: CPU,
+            })
+            .collect();
+
+        let cpu_diagonal_win: Vec<Cell> = self
+            .cells
+            .clone()
+            .into_iter()
+            .filter(|c| diagonal_win.contains(c))
+            .collect();
+
+        let cpu_won_diagonal = cpu_diagonal_win.len() == 3;
+        if cpu_won_diagonal {
+            return true;
+        }
+
+        let diagonal_win_2: Vec<Cell> = vec![(0, 2), (1, 1), (2, 0)]
+            .into_iter()
+            .map(|(row, column)| Cell {
+                row,
+                column,
+                value: CPU,
+            })
+            .collect();
+
+        let cpu_diagonal_win_2: Vec<Cell> = self
+            .cells
+            .clone()
+            .into_iter()
+            .filter(|c| diagonal_win_2.contains(c))
+            .collect();
+
+        let cpu_won_diagonal_2 = cpu_diagonal_win_2.len() == 3;
+        if cpu_won_diagonal_2 {
+            return true;
+        }
+
+        false
     }
 
     pub fn get_cell(cells: Vec<Cell>, row: u8, column: u8) -> Option<Cell> {
@@ -98,13 +171,6 @@ impl Board {
         })
     }
 
-    fn set(&mut self, cell: Cell) -> Option<Vec<Cell>> {
-        let maybe_set = Board::set_on(self.cells.clone(), cell);
-        // Replace if available
-        maybe_set.clone().map(|cells| self.set_all(cells));
-        maybe_set
-    }
-
     pub fn set_on(mut cells: Vec<Cell>, cell: Cell) -> Option<Vec<Cell>> {
         if let Some(index) = cells
             .iter()
@@ -118,6 +184,17 @@ impl Board {
         }
 
         None
+    }
+
+    pub fn is_moves_left(cells: Vec<Cell>) -> bool {
+        cells.into_iter().any(|c| c.value == Empty)
+    }
+
+    fn set(&mut self, cell: Cell) -> Option<Vec<Cell>> {
+        let maybe_set = Board::set_on(self.cells.clone(), cell);
+        // Replace if available
+        maybe_set.clone().map(|cells| self.set_all(cells));
+        maybe_set
     }
 
     fn empty_cell(row: u8, column: u8) -> Cell {
@@ -304,6 +381,58 @@ mod tests {
 
         let actual = board.set(cell);
         let expected = None;
+
+        assert_eq!(actual, expected);
+    }
+
+    #[test]
+    fn test_is_cpu_winner__when__row_win() {
+        let mut board = Board::new();
+        board.set_cpu(0, 0);
+        board.set_cpu(0, 1);
+        board.set_cpu(0, 2);
+
+        let actual = board.is_cpu_winner();
+        let expected = true;
+
+        assert_eq!(actual, expected);
+    }
+
+    #[test]
+    fn test_is_cpu_winner__when__column_win() {
+        let mut board = Board::new();
+        board.set_cpu(0, 0);
+        board.set_cpu(1, 0);
+        board.set_cpu(2, 0);
+
+        let actual = board.is_cpu_winner();
+        let expected = true;
+
+        assert_eq!(actual, expected);
+    }
+
+    #[test]
+    fn test_is_cpu_winner__when__diagonal_win() {
+        let mut board = Board::new();
+        board.set_cpu(0, 0);
+        board.set_cpu(1, 1);
+        board.set_cpu(2, 2);
+
+        let actual = board.is_cpu_winner();
+        let expected = true;
+
+        assert_eq!(actual, expected);
+    }
+
+    #[test]
+    fn test_is_cpu_winner__when__diagonal_win_2() {
+        let mut board = Board::new();
+        board.set_cpu(0, 2);
+        board.set_cpu(1, 1);
+        board.set_cpu(2, 0);
+
+        let actual = board.is_cpu_winner();
+        let expected = true;
 
         assert_eq!(actual, expected);
     }

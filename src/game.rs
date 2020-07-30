@@ -24,6 +24,11 @@ impl Game {
         JsValue::from_serde(&self.board.get_cells()).unwrap()
     }
 
+    #[wasm_bindgen(js_name = isCpuWinner)]
+    pub fn is_cpu_winner(&self) -> bool {
+        self.board.is_cpu_winner()
+    }
+
     #[wasm_bindgen(js_name = hasEmptyCells)]
     pub fn has_empty_cells(&self) -> bool {
         Board::is_moves_left(self.board.get_cells())
