@@ -42,7 +42,7 @@ impl Evaluator {
                 )
                 .unwrap();
 
-                let score = self.minimax(cells.clone(), 0);
+                let score = self.minimax(cells, 0);
                 (c, score)
             })
             .min_by(|(_c, score), (_c2, score2)| score2.cmp(score))
@@ -84,7 +84,7 @@ impl Evaluator {
                 )
                 .unwrap();
 
-                self.minimax(cells.clone(), (depth + 1) as u8)
+                self.minimax(cells, (depth + 1) as u8)
             })
             .min_by(|score, score2| score2.cmp(score))
             .unwrap()
@@ -228,7 +228,6 @@ impl Evaluator {
         ];
 
         let actual_cells = cells
-            .clone()
             .into_iter()
             .filter(|c| expected_cells.contains(c))
             .collect::<Vec<Cell>>();

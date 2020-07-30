@@ -1,6 +1,6 @@
 import {Game} from "wasm-impossible-tic-tac-toe";
 
-const game = Game.new();
+const game = new Game();
 
 // If game state is draw or CPU won player should not be able to make any more plays
 let isPlayable = true;

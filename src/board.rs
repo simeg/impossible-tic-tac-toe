@@ -34,8 +34,8 @@ pub struct Board {
     cells: Vec<Cell>,
 }
 
-impl Board {
-    pub fn new() -> Board {
+impl Default for Board {
+    fn default() -> Self {
         let mut cells = vec![];
         for row in 0..=2 {
             for column in 0..=2 {
@@ -45,7 +45,9 @@ impl Board {
 
         Board { cells }
     }
+}
 
+impl Board {
     pub fn clear(&mut self) {
         let cleared_cells = self
             .cells
@@ -193,7 +195,9 @@ impl Board {
     fn set(&mut self, cell: Cell) -> Option<Vec<Cell>> {
         let maybe_set = Board::set_on(self.cells.clone(), cell);
         // Replace if available
-        maybe_set.clone().map(|cells| self.set_all(cells));
+        if let Some(cells) = maybe_set.clone() {
+            self.set_all(cells)
+        }
         maybe_set
     }
 
@@ -215,7 +219,7 @@ mod tests {
 
     #[test]
     fn test_new_board__creates_cells() {
-        let board = Board::new();
+        let board = Board::default();
         let cells = board.get_cells();
 
         let actual = cells.len();
@@ -226,7 +230,7 @@ mod tests {
 
     #[test]
     fn test_get_cell__returns_correct_cell() {
-        let board = Board::new();
+        let board = Board::default();
         let cells = board.get_cells();
 
         let actual = Board::get_cell(cells, 1, 1);
@@ -241,7 +245,7 @@ mod tests {
 
     #[test]
     fn test_is_moves_left__when__moves_left() {
-        let board = Board::new();
+        let board = Board::default();
         let actual = Board::is_moves_left(board.get_cells());
         let expected = true;
 
@@ -291,7 +295,7 @@ mod tests {
 
     #[test]
     fn test_set_all() {
-        let mut board = Board::new();
+        let mut board = Board::default();
 
         let before_replace_len = board.get_cells().len();
         assert_eq!(before_replace_len, 9);
@@ -311,7 +315,7 @@ mod tests {
 
     #[test]
     fn test_set() {
-        let mut board = Board::new();
+        let mut board = Board::default();
         let before_set = Board::get_cell(board.get_cells(), 1, 1);
         let before_set_cell = Some(Cell {
             row: 1,
@@ -342,7 +346,7 @@ mod tests {
 
     #[test]
     fn test_set__when__not_empty() {
-        let mut board = Board::new();
+        let mut board = Board::default();
         let cell = Cell {
             row: 1,
             column: 1,
@@ -372,7 +376,7 @@ mod tests {
 
     #[test]
     fn test_set__when__out_of_range() {
-        let mut board = Board::new();
+        let mut board = Board::default();
         let cell = Cell {
             row: 100,
             column: 100,
@@ -387,7 +391,7 @@ mod tests {
 
     #[test]
     fn test_is_cpu_winner__when__row_win() {
-        let mut board = Board::new();
+        let mut board = Board::default();
         board.set_cpu(0, 0);
         board.set_cpu(0, 1);
         board.set_cpu(0, 2);
@@ -400,7 +404,7 @@ mod tests {
 
     #[test]
     fn test_is_cpu_winner__when__column_win() {
-        let mut board = Board::new();
+        let mut board = Board::default();
         board.set_cpu(0, 0);
         board.set_cpu(1, 0);
         board.set_cpu(2, 0);
@@ -413,7 +417,7 @@ mod tests {
 
     #[test]
     fn test_is_cpu_winner__when__diagonal_win() {
-        let mut board = Board::new();
+        let mut board = Board::default();
         board.set_cpu(0, 0);
         board.set_cpu(1, 1);
         board.set_cpu(2, 2);
@@ -426,7 +430,7 @@ mod tests {
 
     #[test]
     fn test_is_cpu_winner__when__diagonal_win_2() {
-        let mut board = Board::new();
+        let mut board = Board::default();
         board.set_cpu(0, 2);
         board.set_cpu(1, 1);
         board.set_cpu(2, 0);

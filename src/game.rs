@@ -12,9 +12,11 @@ pub struct Game {
 
 #[wasm_bindgen]
 impl Game {
+    #[wasm_bindgen(constructor)]
+    #[allow(clippy::new_without_default)]
     pub fn new() -> Game {
         Game {
-            board: Board::new(),
+            board: Board::default(),
             evaluator: Evaluator {},
         }
     }
@@ -41,9 +43,7 @@ impl Game {
 
     #[wasm_bindgen(js_name = cpuPlay)]
     pub fn cpu_play(&mut self) {
-        let best_move = self
-            .evaluator
-            .find_best_move(self.board.get_cells().clone());
+        let best_move = self.evaluator.find_best_move(self.board.get_cells());
         self.board.set_cpu(best_move.row, best_move.column);
     }
 
